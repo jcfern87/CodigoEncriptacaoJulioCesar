@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cctype>
 #include <string>
+#include <locale.h>
 using namespace std;
 
 // Essa função transforma a letra minúscula em maiúscula usando a biblioteca cctype e a função toupper (caso haja) e retorna o número da posição da letra (entre 0 e 25).
@@ -50,12 +51,44 @@ std::string cifraCesar(const std::string &texto, int chave, const char alfabeto[
     return textoEncriptado;
 }
 
+string descriptografaPalavra(const string &palavraCodificada, int chave) 
+{
+    const char alfabeto[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    char letraCodificada;
+    string palavraDescodificada;
+    for (char c : palavraCodificada)
+    {
+        letraCodificada = getEncryptedLetter(alfabeto, getLetterNumber(toupper(c), alfabeto) - chave);
+        palavraDescodificada += letraCodificada;
+    }
+
+    return palavraDescodificada;
+    
+}
+
+void descobreChave(const string &palavraCodificada, size_t tentativas)
+{
+    cout << "Serão feitas " << tentativas << " tentativas de descobrir a chave." << endl;
+
+    for (size_t i = 1; i < tentativas; i++)
+    {
+        cout << "Tentativa com a chave " << i << ":" << endl;
+        cout << descriptografaPalavra(palavraCodificada, i) << endl;
+    }
+    
+}
+
+
 int main()
 {
+    setlocale(LC_ALL, "Portuguese");
     const char alfabeto[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     int chave = 25;
     std::string palavra = "inconstitussionalissimamente";
-    std::cout << cifraCesar(palavra, chave, alfabeto);
+    std::cout << cifraCesar(palavra, chave, alfabeto) << "\n\n";
+    int tentativas = 4;
+    std::string palavraCodificada = "dudud";
+    descobreChave(palavraCodificada, tentativas);
     return 0;
 }
 
